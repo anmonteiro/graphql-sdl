@@ -1,0 +1,19 @@
+(library
+ (name graphql_sdl)
+ (public_name graphql-sdl)
+ (modules graphql_sdl graphql_schema_parser graphql_schema_lexer ast
+   graphql_schema_printer)
+ (libraries graphql yojson easy-format))
+
+(ocamllex
+ (modules graphql_schema_lexer))
+
+(menhir
+ (modules graphql_schema_parser)
+ (flags --explain --strict --unused-tokens --fixed-exception))
+
+(executable
+ (name graphql_sdl_tester)
+ ; (public_name toolchain_tester)
+ (modules graphql_sdl_tester)
+ (libraries graphql-sdl))
