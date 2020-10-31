@@ -133,4 +133,14 @@ let tests =
         test_parser_printer_bidirectionality
           "interface Node { id: ID!  }\n\
           \       type Foo implements Node { id: ID! name: String! }" )
+  ; ( "reserved name query as field name"
+    , `Quick
+    , fun () ->
+        test_parser_printer_bidirectionality
+          "type Foo { query: SomeThing! }" )
+  ; ( "reserved name input as argument name"
+    , `Quick
+    , fun () ->
+        test_parser_printer_bidirectionality
+          "type Foo { someThing(input: InputObj!): Query! }" )
   ]
