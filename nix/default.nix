@@ -21,7 +21,6 @@ rec {
       yojson
       easy-format
 
-      reason
       alcotest
       alcotest-lwt
     ];
