@@ -252,6 +252,7 @@ keyword_name:
   | MUTATION { "mutation" }
   | SUBSCRIPTION { "subscription" }
   | INPUT { "input" }
+  | TYPE { "type" }
   | INTERFACE { "interface" }
   | ENUM { "enum" }
   | UNION { "union" }
