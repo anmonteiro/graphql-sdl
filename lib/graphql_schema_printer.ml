@@ -126,7 +126,9 @@ let formatArguments arguments =
       makeList
         ~inline:(true, true)
         (List.mapi
-           (fun i { Ast.name; typ; default_value; description } ->
+           (fun i
+                ({ Ast.name; typ; default_value; description } :
+                  Ast.argument_definition) ->
              let argDef =
                makeList
                  [ makeList ~space:false [ atom name; atom ":" ]
@@ -184,6 +186,39 @@ let format_directives directives =
         else
           [ arguments_layout ]))
     directives
+
+let formatInputFields fields =
+  List.map
+    (fun { Ast.typ; name; arguments; description; directives; default_value } ->
+      let layout =
+        match formatArguments arguments with
+        | None ->
+          atom name
+        | Some args_layout ->
+          let wrapped = makeList ~wrap:("(", ")") [ args_layout ] in
+          label ~break:`Never (atom name) wrapped
+      in
+      let field_layout =
+        makeList
+          ~space:false
+          ~indent:0
+          ~break:Never
+          [ layout; makeList [ atom ":"; atom (formatFieldTyp typ) ] ]
+      in
+      let field_layout =
+        match default_value with
+        | None ->
+          field_layout
+        | Some value ->
+          makeList [ field_layout; atom "="; formatConstValue value ]
+      in
+      formatDescription
+        description
+        (makeList
+           ~inline:(true, true)
+           ~indent:0
+           (field_layout :: format_directives directives)))
+    fields
 
 let formatFields fields =
   List.map
@@ -270,7 +305,7 @@ let pprint_typ typ =
          ~space:true
          (atom "input")
          (makeList (atom name :: format_directives directives)))
-      (formatFields field_defs)
+      (formatInputFields field_defs)
       description
   | Enum { name; possibleVals; directives; description } ->
     formatType

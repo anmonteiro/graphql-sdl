@@ -97,14 +97,13 @@ optional_implementations:
   | optional_implementations IMPLEMENTS name { $3 :: $1 }
 
 input_type_definition:
-  | optional_description INPUT name directives field_set
+  | optional_description INPUT name directives input_field_set
     {
       InputType {
         name = $3;
         field_defs = $5;
         directives = $4;
         description = $1;
-        interfaces = None
       }
     }
 
@@ -196,8 +195,14 @@ union_vals:
 enum_vals:
   | LBRACE enum_value_decl+ RBRACE { $2 }
 
+mk_field_set(X):
+  | LBRACE X+ RBRACE { $2 }
+
 field_set:
-  | LBRACE field+ RBRACE { $2 }
+  mk_field_set(field) { $1 }
+
+input_field_set:
+  mk_field_set(input_field) { $1 }
 
 field:
   optional_description name default_list(arguments) COLON typ directives
@@ -208,6 +213,19 @@ field:
         arguments = $3;
         directives = $6;
         description = $1;
+      }
+    }
+
+input_field:
+  optional_description name default_list(arguments) COLON typ default_value? directives
+    {
+       {
+        name = $2;
+        typ = $5;
+        arguments = $3;
+        directives = $7;
+        description = $1;
+        default_value = $6
       }
     }
 

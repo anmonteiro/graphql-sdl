@@ -12,6 +12,15 @@ type argument_definition =
   ; description : string option
   }
 
+type input_field =
+  { typ : Graphql_parser.typ
+  ; name : string
+  ; arguments : argument_definition list
+  ; directives : directive list
+  ; description : string option
+  ; default_value : Graphql_parser.const_value option
+  }
+
 type field =
   { typ : Graphql_parser.typ
   ; name : string
@@ -26,6 +35,13 @@ type schemaTyp =
   ; directives : directive list
   ; description : string option
   ; interfaces : string list option
+  }
+
+type inputTyp =
+  { name : string
+  ; field_defs : input_field list
+  ; directives : directive list
+  ; description : string option
   }
 
 type enumValue =
@@ -58,7 +74,7 @@ type schema_definition =
   }
 
 type optype =
-  | InputType of schemaTyp
+  | InputType of inputTyp
   | Type of schemaTyp
   | Enum of enumTyp
   | Union of enumTyp
