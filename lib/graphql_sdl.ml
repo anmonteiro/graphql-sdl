@@ -58,8 +58,7 @@ let print_position lexbuf =
 let parse_with_error lexbuf =
   try Graphql_schema_parser.doc Graphql_schema_lexer.token lexbuf with
   | Graphql_schema_parser.Error ->
-    Printf.eprintf "%s: syntax error\n" (print_position lexbuf);
-    exit (-1)
+    failwith (Format.sprintf "%s: syntax error\n" (print_position lexbuf))
 
 let parse_and_print lexbuf = parse_with_error lexbuf
 

@@ -32,7 +32,7 @@ rule token = parse
   | "on"           { ON }
   | "true"         { BOOL true }
   | "type"         { TYPE }
-  | "input"        { INPUT_TYPE }
+  | "input"        { INPUT }
   | "enum"         { ENUM }
   | "union"        { UNION }
   | "interface"    { INTERFACE }

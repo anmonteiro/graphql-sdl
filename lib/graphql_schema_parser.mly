@@ -33,7 +33,7 @@ let rec has_duplicates = function
 %token MUTATION
 %token SUBSCRIPTION
 %token TYPE
-%token INPUT_TYPE
+%token INPUT
 %token ENUM
 %token UNION
 %token INTERFACE
@@ -97,7 +97,7 @@ optional_implementations:
   | optional_implementations IMPLEMENTS name { $3 :: $1 }
 
 input_type_definition:
-  | optional_description INPUT_TYPE name directives field_set
+  | optional_description INPUT name directives field_set
     {
       InputType {
         name = $3;
@@ -132,11 +132,11 @@ enum_definition:
     }
 
 union_definition:
-  | optional_description UNION name directives EQUAL union_vals
+  | optional_description UNION name directives EQUAL PIPE? union_vals
     {
       Union {
         name = $3;
-        possibleVals = $6;
+        possibleVals = $7;
         directives = $4;
         description = $1
       }
@@ -188,9 +188,10 @@ schema_definition:
     }
   }
 
-%inline union_vals:
-  | PIPE? lseparated_list(PIPE, name)
-  { List.map (fun x -> {name = x; description = None}) $2 }
+union_vals:
+  | name  { [ {name = $1; description = None} ] }
+  | name PIPE union_vals
+  { {name = $1; description = None} :: $3 }
 
 enum_vals:
   | LBRACE enum_value_decl+ RBRACE { $2 }
@@ -250,12 +251,19 @@ keyword_name:
   | QUERY { "query" }
   | MUTATION { "mutation" }
   | SUBSCRIPTION { "subscription" }
+  | INPUT { "input" }
+  | INTERFACE { "interface" }
+  | ENUM { "enum" }
+  | UNION { "union" }
+  | SCALAR { "scalar" }
+  | SCHEMA { "schema" }
   (* | FRAGMENT { "fragment" } *)
 
 fragment_name:
   | NULL { "null" }
   | BOOL { string_of_bool $1 }
   | NAME { $1 }
+  | keyword_name { $1 }
 
 name:
   | fragment_name { $1 }

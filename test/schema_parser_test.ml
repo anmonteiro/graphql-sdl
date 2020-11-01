@@ -136,8 +136,7 @@ let tests =
   ; ( "reserved name query as field name"
     , `Quick
     , fun () ->
-        test_parser_printer_bidirectionality
-          "type Foo { query: SomeThing! }" )
+        test_parser_printer_bidirectionality "type Foo { query: SomeThing! }" )
   ; ( "reserved name input as argument name"
     , `Quick
     , fun () ->
