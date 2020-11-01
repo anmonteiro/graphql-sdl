@@ -142,4 +142,9 @@ let tests =
     , fun () ->
         test_parser_printer_bidirectionality
           "type Foo { someThing(input: InputObj!): Query! }" )
+  ; ( "default value in input type"
+    , `Quick
+    , fun () ->
+        test_parser_printer_bidirectionality
+          "input SomeInput { something: SortOrder = ASC }" )
   ]
